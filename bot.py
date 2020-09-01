@@ -11,5 +11,14 @@ bot = commands.Bot(command_prefix = '!')
 
 @bot.command(name="info")
 async def info(ctx, input):
-    print(wikipedia.search(input))
+    embed = discord.Embed(
+        title = f'Search Results',
+        description = f'Here are the results of searching for {input}....',
+        colour = discord.Colour.blue()
+    )
+    search_results = wikipedia.search(input, results= 10, suggestion=True)
+    for result in search_results:
+        result_url = wikipedia.page(result).url
+        embed.add_field(name=result, value=result_url, inline=False)
+    await ctx.send(embed=embed)
 bot.run(TOKEN)
