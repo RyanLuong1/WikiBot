@@ -1,6 +1,7 @@
 import os
 import discord
 import wikipedia
+import re
 from dotenv import load_dotenv
 from discord.ext import commands
 load_dotenv()
@@ -12,13 +13,24 @@ bot = commands.Bot(command_prefix = '!')
 @bot.command(name="info")
 async def info(ctx, input):
     embed = discord.Embed(
-        title = f'Search Results',
-        description = f'Here are the results of searching for {input}....',
+        title = f'{input}',
         colour = discord.Colour.blue()
     )
-    search_results = wikipedia.search(input, results= 10, suggestion=True)
-    for result in search_results:
-        result_url = wikipedia.page(result).url
-        embed.add_field(name=result, value=result_url, inline=False)
+    summary = wikipedia.summary(input)
+    print(len(summary))
+    if len(summary) > 2048:
+        summary = summary[:2048]
+        first_occurence_white_space = len(summary)
+        for char in reversed(range(0, len(summary))):
+            if summary[char].isspace():
+                break;
+            first_occurence_white_space -= 1;
+        how_many_trailing_dots = len(summary) - first_occurence_white_space
+        summary = summary[:first_occurence_white_space] + ('.')*how_many_trailing_dots
+    print(len(summary))
+    embed.description = summary
+    search_result = wikipedia.search(input, results= 1, suggestion=False)
+    result_url = wikipedia.page(search_result).url
+    embed.add_field(name=search_result, value=result_url, inline=False)
     await ctx.send(embed=embed)
 bot.run(TOKEN)
