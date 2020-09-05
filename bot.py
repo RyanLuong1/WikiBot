@@ -25,12 +25,24 @@ async def info(ctx, input):
                 break;
             first_occurence_white_space -= 1;
         how_many_trailing_dots = len(summary) - first_occurence_white_space
-        summary = summary[:first_occurence_white_space] + ('.')*how_many_trailing_dots
+        summary = summary[:first_occurence_white_space - 1] + ('.')*how_many_trailing_dots
     image_url = wikipedia.page(input).images[0]
     embed.description = summary
     embed.set_thumbnail(url=image_url)
     search_result = wikipedia.search(input, results= 1, suggestion=False)
     result_url = wikipedia.page(search_result).url
     embed.add_field(name=search_result, value=result_url, inline=False)
+    await ctx.send(embed=embed)
+
+@bot.command(name="suggestion")
+async def suggestion(ctx, input):
+    embed = discord.Embed(
+        title = f'{input}',
+        colour = discord.Colour.blue()
+    )
+    suggestion_result = wikipedia.search(input, results = 5, suggestion=False)
+    for suggestion in suggestion_result:
+        suggestion_url = wikipedia.page(suggestion).url
+        embed.add_field(name=suggestion, value=suggestion_url, inline=False)
     await ctx.send(embed=embed)
 bot.run(TOKEN)
