@@ -17,7 +17,6 @@ async def info(ctx, input):
         colour = discord.Colour.blue()
     )
     summary = wikipedia.summary(input)
-    print(len(summary))
     if len(summary) > 2048:
         summary = summary[:2048]
         first_occurence_white_space = len(summary)
@@ -27,8 +26,9 @@ async def info(ctx, input):
             first_occurence_white_space -= 1;
         how_many_trailing_dots = len(summary) - first_occurence_white_space
         summary = summary[:first_occurence_white_space] + ('.')*how_many_trailing_dots
-    print(len(summary))
+    image_url = wikipedia.page(input).images[0]
     embed.description = summary
+    embed.set_thumbnail(url=image_url)
     search_result = wikipedia.search(input, results= 1, suggestion=False)
     result_url = wikipedia.page(search_result).url
     embed.add_field(name=search_result, value=result_url, inline=False)
