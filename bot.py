@@ -41,8 +41,10 @@ async def suggestion(ctx, input):
         colour = discord.Colour.blue()
     )
     suggestion_result = wikipedia.search(input, results = 5, suggestion=False)
+    index = 1
     for suggestion in suggestion_result:
         suggestion_url = wikipedia.page(suggestion).url
-        embed.add_field(name=suggestion, value=suggestion_url, inline=False)
+        embed.add_field(name=f'{index}. {suggestion}', value='\u200b', inline=False)
+        index += 1
     await ctx.send(embed=embed)
 bot.run(TOKEN)
