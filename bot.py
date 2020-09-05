@@ -46,5 +46,8 @@ async def suggestion(ctx, input):
         suggestion_url = wikipedia.page(suggestion).url
         embed.add_field(name=f'{index}. {suggestion}', value='\u200b', inline=False)
         index += 1
-    await ctx.send(embed=embed)
+    bot_message = await ctx.send(embed=embed)
+    emoji_unicode_list = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣"]
+    for i in range(len(suggestion_result)):
+        await bot_message.add_reaction(emoji_unicode_list[i])
 bot.run(TOKEN)
