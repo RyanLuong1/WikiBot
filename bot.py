@@ -34,10 +34,10 @@ async def info(ctx, input):
     embed.add_field(name=search_result, value=result_url, inline=False)
     await ctx.send(embed=embed)
 
-@bot.command(name="suggestion")
+@bot.command(name="suggestions")
 async def suggestion(ctx, input):
     embed = discord.Embed(
-        title = f'{input}',
+        title = f'Wikipedia Suggestions Results',
         colour = discord.Colour.blue()
     )
     suggestion_result = wikipedia.search(input, results = 5, suggestion=False)
@@ -50,4 +50,10 @@ async def suggestion(ctx, input):
     emoji_unicode_list = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣"]
     for i in range(len(suggestion_result)):
         await bot_message.add_reaction(emoji_unicode_list[i])
+
+@bot.event
+async def on_reaction_add(reaction, user):
+    if user.bot:
+        return
+
 bot.run(TOKEN)
