@@ -55,5 +55,10 @@ async def suggestion(ctx, input):
 async def on_reaction_add(reaction, user):
     if user.bot:
         return
-
+    else:
+        if reaction.message.embeds:
+            if reaction.message.embeds[0].title == "Wikipedia Suggestions Results":
+                list_of_fields = reaction.message.embeds[0].fields
+                for i in list_of_fields:
+                    print(i.name)
 bot.run(TOKEN)
