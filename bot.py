@@ -10,6 +10,15 @@ TOKEN = os.getenv('DISCORD_TOKEN')
 
 bot = commands.Bot(command_prefix = '!')
 
+def number_words_to_numbers(number_word):
+    number = {"one": 1,
+              "two": 2,
+              "three": 3,
+              "four": 4,
+              "five": 5}
+    return number[number_word]
+
+
 @bot.command(name="info")
 async def info(ctx, input):
     embed = discord.Embed(
@@ -59,6 +68,4 @@ async def on_reaction_add(reaction, user):
         if reaction.message.embeds:
             if reaction.message.embeds[0].title == "Wikipedia Suggestions Results":
                 list_of_fields = reaction.message.embeds[0].fields
-                for i in list_of_fields:
-                    print(i.name)
 bot.run(TOKEN)
