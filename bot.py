@@ -2,6 +2,7 @@ import os
 import discord
 import wikipedia
 import re
+import unicodedata
 from dotenv import load_dotenv
 from discord.ext import commands
 load_dotenv()
@@ -17,7 +18,6 @@ def number_words_to_numbers(number_word):
               "four": 4,
               "five": 5}
     return number[number_word]
-
 
 @bot.command(name="info")
 async def info(ctx, input):
@@ -67,5 +67,9 @@ async def on_reaction_add(reaction, user):
     else:
         if reaction.message.embeds:
             if reaction.message.embeds[0].title == "Wikipedia Suggestions Results":
-                list_of_fields = reaction.message.embeds[0].fields
+                if reaction.emoji == "1️⃣" or reaction.emoji == "2️⃣" or reaction.emoji == "3️⃣" or reaction.emoji == "4️⃣" or reaction.emoji == "5️⃣":
+                    number_word = unicodedata.name(reaction.emoji[0])
+                    number_word = number_word.split(' ')[-1]
+                    number = number_words_to_numbers(number_word.lower())
+                    print(number)
 bot.run(TOKEN)
