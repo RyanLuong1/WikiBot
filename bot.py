@@ -71,5 +71,6 @@ async def on_reaction_add(reaction, user):
                     number_word = unicodedata.name(reaction.emoji[0])
                     number_word = number_word.split(' ')[-1]
                     number = number_words_to_numbers(number_word.lower())
-                    print(number)
+                    field = reaction.message.embeds[0].fields[number - 1]
+                    print(field.name)
 bot.run(TOKEN)
