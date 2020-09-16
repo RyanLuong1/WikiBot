@@ -94,6 +94,8 @@ async def on_reaction_add(reaction, user):
                     result_url = wikipedia.page(search_result).url
                     embed.add_field(name=search_result, value=result_url, inline=False)
                     await reaction.message.edit(embed=embed)
+                    await reaction.message.clear_reactions()
+
                     
                     
 bot.run(TOKEN)
