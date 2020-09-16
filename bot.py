@@ -19,7 +19,7 @@ def number_words_to_numbers(number_word):
               "five": 5}
     return number[number_word]
 
-@bot.command(name="info")
+@bot.command(name="search")
 async def info(ctx, input):
     embed = discord.Embed(
         title = f'{input}',
