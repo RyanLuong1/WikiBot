@@ -72,5 +72,12 @@ async def on_reaction_add(reaction, user):
                     number_word = number_word.split(' ')[-1]
                     number = number_words_to_numbers(number_word.lower())
                     field = reaction.message.embeds[0].fields[number - 1]
-                    print(field.name)
+                    name = field.name[3:]
+                    embed = discord.Embed(
+                        title = f'{name}',
+                        colour = discord.Colour.blue()
+                    )
+                    summary = wikipedia.summary(name)
+                    
+                    
 bot.run(TOKEN)
