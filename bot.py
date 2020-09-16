@@ -78,6 +78,15 @@ async def on_reaction_add(reaction, user):
                         colour = discord.Colour.blue()
                     )
                     summary = wikipedia.summary(name)
+                    if len(summary) > 2048:
+                        summary = summary[:2048]
+                        first_occurence_white_space = len(summary)
+                        for char in reversed(range(0, len(summary))):
+                            if summary[char].isspace():
+                                break;
+                            first_occurence_white_space -= 1;
+                        how_many_trailing_dots = len(summary) - first_occurence_white_space
+                        summary = summary[:first_occurence_white_space - 1] + ('.')*how_many_trailing_dots
                     
                     
 bot.run(TOKEN)
