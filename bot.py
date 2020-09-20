@@ -28,16 +28,21 @@ async def info(ctx, input):
     summary = wikipedia.summary(input)
     if len(summary) > 2048:
         summary = summary[:2048]
-        first_occurence_white_space = len(summary)
+        white_space_occurence = len(summary)
+        first_white_space_found = False
         for char in reversed(range(0, len(summary))):
             if summary[char].isspace():
-                break;
-            first_occurence_white_space -= 1;
-        how_many_trailing_dots = len(summary) - first_occurence_white_space
-        summary = summary[:first_occurence_white_space - 1] + ('.')*how_many_trailing_dots
+                if not first_white_space_found:
+                    first_white_space_found = True
+                else:
+                    break;
+            white_space_occurence -= 1;
+        how_many_trailing_dots = len(summary) - white_space_occurence
+        summary = summary[:white_space_occurence - 1] + ('.')*how_many_trailing_dots
     image_url = wikipedia.page(input).images[0]
     embed.description = summary
-    embed.set_thumbnail(url=image_url)
+    embed.set_image(url=image_url)
+    embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/740004762845577297/757319155211960582/wikipedialog.png")
     search_result = wikipedia.search(input, results= 1, suggestion=False)
     result_url = wikipedia.page(search_result).url
     embed.add_field(name=search_result, value=result_url, inline=False)
@@ -80,16 +85,17 @@ async def on_reaction_add(reaction, user):
                     summary = wikipedia.summary(name)
                     if len(summary) > 2048:
                         summary = summary[:2048]
-                        first_occurence_white_space = len(summary)
+                        white_space_occurence = len(summary)
                         for char in reversed(range(0, len(summary))):
                             if summary[char].isspace():
                                 break;
-                            first_occurence_white_space -= 1;
-                        how_many_trailing_dots = len(summary) - first_occurence_white_space
-                        summary = summary[:first_occurence_white_space - 1] + ('.')*how_many_trailing_dots
+                            white_space_occurence -= 1;
+                        how_many_trailing_dots = len(summary) - white_space_occurence
+                        summary = summary[:white_space_occurence - 1] + ('.')*how_many_trailing_dots
                     image_url = wikipedia.page(name).images[0]
                     embed.description = summary
-                    embed.set_thumbnail(url=image_url)
+                    embed.set_image(url=image_url)
+                    embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/740004762845577297/757319155211960582/wikipedialog.png")
                     search_result = wikipedia.search(name, results= 1, suggestion=False)
                     result_url = wikipedia.page(search_result).url
                     embed.add_field(name=search_result, value=result_url, inline=False)
