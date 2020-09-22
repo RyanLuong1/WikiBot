@@ -3,6 +3,7 @@ import discord
 import wikipedia
 import re
 import unicodedata
+import random
 from dotenv import load_dotenv
 from discord.ext import commands
 load_dotenv()
@@ -39,7 +40,8 @@ async def info(ctx, input):
             white_space_occurence -= 1;
         how_many_trailing_dots = len(summary) - white_space_occurence
         summary = summary[:white_space_occurence - 1] + ('.')*how_many_trailing_dots
-    image_url = wikipedia.page(input).images[0]
+    image = wikipedia.page(input).images
+    image_url = random.choice(image)
     embed.description = summary
     embed.set_image(url=image_url)
     embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/740004762845577297/757319155211960582/wikipedialog.png")
@@ -92,7 +94,8 @@ async def on_reaction_add(reaction, user):
                             white_space_occurence -= 1;
                         how_many_trailing_dots = len(summary) - white_space_occurence
                         summary = summary[:white_space_occurence - 1] + ('.')*how_many_trailing_dots
-                    image_url = wikipedia.page(name).images[0]
+                    image = wikipedia.page(name).images
+                    image_url = random.choice(image)
                     embed.description = summary
                     embed.set_image(url=image_url)
                     embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/740004762845577297/757319155211960582/wikipedialog.png")
