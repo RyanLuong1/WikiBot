@@ -54,11 +54,13 @@ def get_search_result(input):
 def get_search_result_url(search_result):
     return wikipedia.page(search_result).url
 
-# def populate_embed_message(embed, input, summary, image_url):
-#     embed.title = f'{input}'
-#     embed.description = summary
-#     embed.set_image(url=image_url)
-#     embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/740004762845577297/757319155211960582/wikipedialog.png")
+def populate_embed_message(embed, input, summary, image_url, search_result, search_result_url):
+    embed.title = f'{input}'
+    embed.description = summary
+    embed.set_image(url=image_url)
+    embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/740004762845577297/757319155211960582/wikipedialog.png")
+    embed.add_field(name=search_result, value=search_result_url, inline=False)
+    return embed
 
 @bot.command(name="search")
 async def info(ctx, input):
@@ -68,13 +70,10 @@ async def info(ctx, input):
             summary = add_trailing_dots(summary)
         images = get_wikipedia_article_images(input)
         image_url = get_random_wikipedia_article_image(images)
-        embed = create_embed_message()
-        embed.description = summary
-        embed.set_image(url=image_url)
-        embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/740004762845577297/757319155211960582/wikipedialog.png")
         search_result = get_search_result(input)
-        result_url = get_search_result_url(search_result)
-        embed.add_field(name=search_result, value=result_url, inline=False)
+        search_result_url = get_search_result_url(search_result)
+        embed = create_embed_message()
+        embed = populate_embed_message(embed, input, summary, image_url, search_result, search_result_url)
         await ctx.send(embed=embed)
     except wikipedia.DisambiguationError:
         await ctx.send(f'Your input, "{input}", is too general. Please be more specific!')
