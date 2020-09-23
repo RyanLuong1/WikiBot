@@ -38,6 +38,9 @@ def add_trailing_dots(summary):
 def get_wikipedia_article_images(input):
     return wikipedia.page(input).images
 
+def get_random_wikipedia_article_image(images):
+    return random.choice(images)
+
 @bot.command(name="search")
 async def info(ctx, input):
     embed = discord.Embed(
@@ -48,8 +51,8 @@ async def info(ctx, input):
         summary = wikipedia.summary(input)
         if len(summary) > 2048:
             summary = add_trailing_dots(summary)
-        image = get_wikipedia_article_images(input)
-        image_url = random.choice(image)
+        images = get_wikipedia_article_images(input)
+        image_url = get_random_wikipedia_article_image(images)
         embed.description = summary
         embed.set_image(url=image_url)
         embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/740004762845577297/757319155211960582/wikipedialog.png")
