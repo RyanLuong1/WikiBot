@@ -41,18 +41,22 @@ def get_wikipedia_article_images(input):
 def get_random_wikipedia_article_image(images):
     return random.choice(images)
 
-@bot.command(name="search")
-async def info(ctx, input):
+def create_embed_message():
     embed = discord.Embed(
-        title = f'{input}',
+        title = f'Title',
         colour = discord.Colour.blue()
     )
+    return embed
+
+@bot.command(name="search")
+async def info(ctx, input):
     try:
         summary = wikipedia.summary(input)
         if len(summary) > 2048:
             summary = add_trailing_dots(summary)
         images = get_wikipedia_article_images(input)
         image_url = get_random_wikipedia_article_image(images)
+        embed = create_embed_message()
         embed.description = summary
         embed.set_image(url=image_url)
         embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/740004762845577297/757319155211960582/wikipedialog.png")
