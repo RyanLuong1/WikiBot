@@ -48,6 +48,15 @@ def create_embed_message():
     )
     return embed
 
+def get_search_result(input):
+    return wikipedia.search(input, results= 1, suggestion=False)
+
+def populate_embed_message(embed, input, summary, image_url):
+    embed.title = f'{input}'
+    embed.description = summary
+    embed.set_image(url=image_url)
+    embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/740004762845577297/757319155211960582/wikipedialog.png")
+
 @bot.command(name="search")
 async def info(ctx, input):
     try:
@@ -60,7 +69,7 @@ async def info(ctx, input):
         embed.description = summary
         embed.set_image(url=image_url)
         embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/740004762845577297/757319155211960582/wikipedialog.png")
-        search_result = wikipedia.search(input, results= 1, suggestion=False)
+        search_result = get_search_result(input)
         result_url = wikipedia.page(search_result).url
         embed.add_field(name=search_result, value=result_url, inline=False)
         await ctx.send(embed=embed)
