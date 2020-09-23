@@ -20,6 +20,21 @@ def number_words_to_numbers(number_word):
               "five": 5}
     return number[number_word]
 
+def add_trailing_dots(summary):
+    summary = summary[:2048]
+    white_space_occurence = len(summary)
+    first_white_space_found = False
+    for char in reversed(range(0, len(summary))):
+        if summary[char].isspace():
+            if not first_white_space_found:
+                first_white_space_found = True
+            else:
+                break;
+        white_space_occurence -= 1;
+    how_many_trailing_dots = len(summary) - white_space_occurence
+    summary = summary[:white_space_occurence - 1] + ('.')*how_many_trailing_dots
+    return summary
+
 @bot.command(name="search")
 async def info(ctx, input):
     embed = discord.Embed(
@@ -29,18 +44,7 @@ async def info(ctx, input):
     try:
         summary = wikipedia.summary(input)
         if len(summary) > 2048:
-            summary = summary[:2048]
-            white_space_occurence = len(summary)
-            first_white_space_found = False
-            for char in reversed(range(0, len(summary))):
-                if summary[char].isspace():
-                    if not first_white_space_found:
-                        first_white_space_found = True
-                    else:
-                        break;
-                white_space_occurence -= 1;
-            how_many_trailing_dots = len(summary) - white_space_occurence
-            summary = summary[:white_space_occurence - 1] + ('.')*how_many_trailing_dots
+            summary = add_trailing_dots(summary)
         image = wikipedia.page(input).images
         image_url = random.choice(image)
         embed.description = summary
