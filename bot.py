@@ -35,6 +35,9 @@ def add_trailing_dots(summary):
     summary = summary[:white_space_occurence - 1] + ('.')*how_many_trailing_dots
     return summary
 
+def get_wikipedia_article_images(input):
+    return wikipedia.page(input).images
+
 @bot.command(name="search")
 async def info(ctx, input):
     embed = discord.Embed(
@@ -45,7 +48,7 @@ async def info(ctx, input):
         summary = wikipedia.summary(input)
         if len(summary) > 2048:
             summary = add_trailing_dots(summary)
-        image = wikipedia.page(input).images
+        image = get_wikipedia_article_images(input)
         image_url = random.choice(image)
         embed.description = summary
         embed.set_image(url=image_url)
