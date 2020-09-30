@@ -41,9 +41,9 @@ def get_wikipedia_article_images(input):
 def get_random_wikipedia_article_image(images):
     return random.choice(images)
 
-def create_embed_message():
+def create_embed_message(title = "Title"):
     embed = discord.Embed(
-        title = f'Title',
+        title = title,
         colour = discord.Colour.blue()
     )
     return embed
@@ -121,10 +121,7 @@ async def on_reaction_add(reaction, user):
                     number = number_words_to_numbers(number_word.lower())
                     field = get_field_from_suggestion_embed(reaction, number)
                     name = get_name_from_field(field)
-                    embed = discord.Embed(
-                        title = f'{name}',
-                        colour = discord.Colour.blue()
-                    )
+                    embed = create_embed_message(name)
                     summary = wikipedia.summary(name)
                     if len(summary) > 2048:
                         summary = summary[:2048]
