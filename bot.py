@@ -67,6 +67,9 @@ def get_number_word(emoji_reaction):
     number_word = number.split(' ')[-1]
     return number_word
 
+def get_field_from_suggestion_embed(reaction, number):
+    return reaction.message.embeds[0].fields[number - 1]
+
 @bot.command(name="search")
 async def info(ctx, input):
     try:
@@ -113,7 +116,7 @@ async def on_reaction_add(reaction, user):
                 if reaction.emoji == "1️⃣" or reaction.emoji == "2️⃣" or reaction.emoji == "3️⃣" or reaction.emoji == "4️⃣" or reaction.emoji == "5️⃣":
                     number_word = get_number_word(reaction.emoji[0])
                     number = number_words_to_numbers(number_word.lower())
-                    field = reaction.message.embeds[0].fields[number - 1]
+                    field = get_field_from_suggestion_embed(reaction, number)
                     name = field.name[3:]
                     embed = discord.Embed(
                         title = f'{name}',
