@@ -70,6 +70,9 @@ def get_number_word(emoji_reaction):
 def get_field_from_suggestion_embed(reaction, number):
     return reaction.message.embeds[0].fields[number - 1]
 
+def get_name_from_field(field):
+    return field.name[3:]
+
 @bot.command(name="search")
 async def info(ctx, input):
     try:
@@ -117,7 +120,7 @@ async def on_reaction_add(reaction, user):
                     number_word = get_number_word(reaction.emoji[0])
                     number = number_words_to_numbers(number_word.lower())
                     field = get_field_from_suggestion_embed(reaction, number)
-                    name = field.name[3:]
+                    name = get_name_from_field(field)
                     embed = discord.Embed(
                         title = f'{name}',
                         colour = discord.Colour.blue()
