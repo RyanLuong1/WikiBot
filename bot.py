@@ -62,6 +62,11 @@ def populate_embed_message(embed, input, summary, image_url, search_result, sear
     embed.add_field(name=search_result, value=search_result_url, inline=False)
     return embed
 
+def get_number_word(emoji_reaction):
+    number = unicodedata.name(emoji_reaction)
+    number_word = number.split(' ')[-1]
+    return number_word
+
 @bot.command(name="search")
 async def info(ctx, input):
     try:
@@ -106,8 +111,7 @@ async def on_reaction_add(reaction, user):
         if reaction.message.embeds:
             if reaction.message.embeds[0].title == "Wikipedia Suggestions Results":
                 if reaction.emoji == "1️⃣" or reaction.emoji == "2️⃣" or reaction.emoji == "3️⃣" or reaction.emoji == "4️⃣" or reaction.emoji == "5️⃣":
-                    number_word = unicodedata.name(reaction.emoji[0])
-                    number_word = number_word.split(' ')[-1]
+                    number_word = get_number_word(reaction.emoji[0])
                     number = number_words_to_numbers(number_word.lower())
                     field = reaction.message.embeds[0].fields[number - 1]
                     name = field.name[3:]
