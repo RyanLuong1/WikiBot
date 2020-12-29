@@ -86,8 +86,11 @@ async def info(ctx, input):
         embed = create_embed_message()
         embed = populate_embed_message(embed, input, summary, image_url, search_result, search_result_url)
         await ctx.send(embed=embed)
-    except wikipedia.DisambiguationError:
-        await ctx.send(f'Your input, "{input}", is too general. Please be more specific!')
+    except wikipedia.DisambiguationError as error:
+        possible_choices = error.options
+        some_suggestions = random.sample(possible_choices, 5)
+        some_suggestions_message = '\n'.join([suggestion for suggestion in some_suggestions])
+        await ctx.send(f'Your input, "{input}", is too general. Please be more specific!\nTry these.\n{some_suggestions_message}')
 
 @bot.command(name="suggestions")
 async def suggestion(ctx, input):
@@ -124,14 +127,7 @@ async def on_reaction_add(reaction, user):
                     embed = create_embed_message(name)
                     summary = wikipedia.summary(name)
                     if len(summary) > 2048:
-                        summary = summary[:2048]
-                        white_space_occurence = len(summary)
-                        for char in reversed(range(0, len(summary))):
-                            if summary[char].isspace():
-                                break;
-                            white_space_occurence -= 1;
-                        how_many_trailing_dots = len(summary) - white_space_occurence
-                        summary = summary[:white_space_occurence - 1] + ('.')*how_many_trailing_dots
+                        summary = add_trailing_dots(summary)
                     image = wikipedia.page(name).images
                     image_url = random.choice(image)
                     embed.description = summary
