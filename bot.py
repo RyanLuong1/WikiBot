@@ -109,8 +109,11 @@ async def suggestion(ctx, input):
         emoji_unicode_list = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣"]
         for i in range(len(suggestion_result)):
             await bot_message.add_reaction(emoji_unicode_list[i])
-    except wikipedia.DisambiguationError:
-        await ctx.send(f'Your input, "{input}", is too general. Please be more specific!')
+    except wikipedia.DisambiguationError as error:
+        possible_choices = error.options
+        some_suggestions = random.sample(possible_choices, 5)
+        some_suggestions_message = '\n'.join([suggestion for suggestion in some_suggestions])
+        await ctx.send(f'Your input, "{input}", is too general. Please be more specific!\nTry these.\n{some_suggestions_message}')
 
 @bot.event
 async def on_reaction_add(reaction, user):
