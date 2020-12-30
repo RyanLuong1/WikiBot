@@ -97,14 +97,13 @@ async def info(ctx, input):
 @bot.command(name="suggestions")
 async def suggestion(ctx, input):
     try:
-        suggestion_result = wikipedia.search(input, results = 5, suggestion=False)
+        suggestion_result = wikipedia.search(str(input))
         embed = discord.Embed(
             title = f'Wikipedia Suggestions Results',
             colour = discord.Colour.blue()
         )
         index = 1
         for suggestion in suggestion_result:
-            suggestion_url = wikipedia.page(suggestion).url
             embed.add_field(name=f'{index}. {suggestion}', value='\u200b', inline=False)
             index += 1
         bot_message = await ctx.send(embed=embed)
