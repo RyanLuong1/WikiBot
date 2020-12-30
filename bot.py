@@ -97,18 +97,19 @@ async def info(ctx, input):
 @bot.command(name="suggestions")
 async def suggestion(ctx, input):
     try:
-        suggestion_result = wikipedia.search(str(input))
+        suggestion_result = wikipedia.search(input)
+        some_suggestions = random.sample(suggestion_result, 5)
         embed = discord.Embed(
             title = f'Wikipedia Suggestions Results',
             colour = discord.Colour.blue()
         )
         index = 1
-        for suggestion in suggestion_result:
+        for suggestion in some_suggestions:
             embed.add_field(name=f'{index}. {suggestion}', value='\u200b', inline=False)
             index += 1
         bot_message = await ctx.send(embed=embed)
         emoji_unicode_list = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣"]
-        for i in range(len(suggestion_result)):
+        for i in range(len(some_suggestions)):
             await bot_message.add_reaction(emoji_unicode_list[i])
     except wikipedia.DisambiguationError as error:
         possible_choices = error.options
