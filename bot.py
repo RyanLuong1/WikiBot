@@ -91,6 +91,8 @@ async def info(ctx, input):
         some_suggestions = random.sample(possible_choices, 5)
         some_suggestions_message = '\n'.join([suggestion for suggestion in some_suggestions])
         await ctx.send(f'Your input, "{input}", is too general. Please be more specific!\nTry these.\n{some_suggestions_message}')
+    except wikipedia.PageError as error:
+        await ctx.send(f'Your input, "{input}", does not match any pages!')
 
 @bot.command(name="suggestions")
 async def suggestion(ctx, input):
@@ -114,6 +116,8 @@ async def suggestion(ctx, input):
         some_suggestions = random.sample(possible_choices, 5)
         some_suggestions_message = '\n'.join([suggestion for suggestion in some_suggestions])
         await ctx.send(f'Your input, "{input}", is too general. Please be more specific!\nTry these.\n{some_suggestions_message}')
+    except wikipedia.PageError as error:
+        await ctx.send(f'Your input, "{input}", does not match any pages!')
 
 @bot.event
 async def on_reaction_add(reaction, user):
