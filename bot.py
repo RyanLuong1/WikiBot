@@ -88,6 +88,9 @@ def get_suggestions_from_possible_choices(possible_choices):
 def create_message_from_some_suggestions(some_suggestions):
     return '\n'.join([suggestion for suggestion in some_suggestions])
 
+def create_debugging_message_for_DisambiguationError(user_inputs, some_suggestions_message):
+    return f'Your input, "{user_inputs}", is too general. Please be more specific!\nTry these.\n{some_suggestions_message}'
+
 @bot.command(name="search")
 async def info(ctx, input):
     try:
@@ -105,7 +108,8 @@ async def info(ctx, input):
         possible_choices = get_all_choices_from_error_message(error)
         some_suggestions = get_suggestions_from_possible_choices(possible_choices)
         some_suggestions_message = create_message_from_some_suggestions(some_suggestions)
-        await ctx.send(f'Your input, "{input}", is too general. Please be more specific!\nTry these.\n{some_suggestions_message}')
+        debug_message = create_debugging_message_for_DisambiguationError(input, some_suggestions_message)
+        await ctx.send(f'{debug_message}')
     except wikipedia.PageError as error:
         await ctx.send(f'Your input, "{input}", does not match any pages!')
 
