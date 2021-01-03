@@ -42,7 +42,10 @@ def get_wikipedia_article_images(input):
     return wikipedia.page(input).images
 
 def get_random_wikipedia_article_image(images):
-    return random.choice(images)
+    try:
+        return random.choice(images)
+    except IndexError:
+        return "https://cdn.discordapp.com/attachments/740004762845577297/757319155211960582/wikipedialog.png"
 
 def create_embed_message(title = "Title"):
     embed = discord.Embed(
@@ -139,6 +142,8 @@ async def on_reaction_add(reaction, user):
                     image_url = get_random_wikipedia_article_image(images)
                     search_result = get_search_result(input)
                     search_result_url = get_search_result_url(search_result)
+                    print(search_result)
+                    print(search_result_url)
                     embed = create_embed_message(name)
                     embed = populate_embed_message(embed, input, summary, image_url, search_result, search_result_url)
                     await reaction.message.edit(embed=embed)
