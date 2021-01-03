@@ -57,6 +57,9 @@ def create_embed_message(title = "Title"):
 def get_search_result(input):
     return wikipedia.search(input, results= 1, suggestion=False)
 
+def get_all_suggestions(input):
+    return wikipedia.search(input)
+
 def get_search_result_url(search_result):
     return wikipedia.page(search_result).url
 
@@ -120,8 +123,8 @@ async def info(ctx, input):
 @bot.command(name="suggestions")
 async def suggestion(ctx, input):
     try:
-        suggestion_result = wikipedia.search(input)
-        some_suggestions = random.sample(suggestion_result, 5)
+        possible_choices = get_all_suggestions(input)
+        some_suggestions = get_suggestions_from_possible_choices(possible_choices)
         embed = create_embed_message(title = "Wikipedia Suggestions Results")
         for count, suggestion in enumerate(some_suggestions):
             embed.add_field(name=f'{count + 1}. {suggestion}', value='\u200b', inline=False)
@@ -130,12 +133,14 @@ async def suggestion(ctx, input):
         for i in range(len(some_suggestions)):
             await bot_message.add_reaction(emoji_unicode_list[i])
     except wikipedia.DisambiguationError as error:
-        possible_choices = error.options
-        some_suggestions = random.sample(possible_choices, 5)
-        some_suggestions_message = '\n'.join([suggestion for suggestion in some_suggestions])
-        await ctx.send(f'Your input, "{input}", is too general. Please be more specific!\nTry these.\n{some_suggestions_message}')
+        possible_choices = get_all_choices_from_error_message(error)
+        some_suggestions = get_suggestions_from_possible_choices(possible_choices)
+        some_suggestions_message = create_message_from_some_suggestions(some_suggestions)
+        debug_message = create_debugging_message_for_DisambiguationError(input, some_suggestions_message)
+        await ctx.send(f'{debug_message}')
     except wikipedia.PageError as error:
-        await ctx.send(f'Your input, "{input}", does not match any pages!')
+        debug_message = create_deubgging_message_for_PageError(input)
+        await ctx.send(f'{debug_message}')
 
 @bot.event
 async def on_reaction_add(reaction, user):
