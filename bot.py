@@ -82,6 +82,9 @@ def get_name_from_field(field):
 def get_all_choices_from_error_message(error):
     return error.options
 
+def get_suggestions_from_possible_choices(possible_choices):
+    return random.sample(possible_choices, 5)
+
 @bot.command(name="search")
 async def info(ctx, input):
     try:
@@ -97,7 +100,7 @@ async def info(ctx, input):
         await ctx.send(embed=embed)
     except wikipedia.DisambiguationError as error:
         possible_choices = get_all_choices_from_error_message(error)
-        some_suggestions = random.sample(possible_choices, 5)
+        some_suggestions = get_suggestions_from_possible_choices(possible_choices)
         some_suggestions_message = '\n'.join([suggestion for suggestion in some_suggestions])
         await ctx.send(f'Your input, "{input}", is too general. Please be more specific!\nTry these.\n{some_suggestions_message}')
     except wikipedia.PageError as error:
