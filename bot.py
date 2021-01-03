@@ -35,11 +35,11 @@ def add_trailing_dots(summary):
     summary = summary[:white_space_occurence - 1] + ('.')*how_many_trailing_dots
     return summary
 
-def get_wikipedia_summary(input):
-    return wikipedia.summary(input)
+def get_wikipedia_summary(user_inputs):
+    return wikipedia.summary(user_inputs)
 
-def get_wikipedia_article_images(input):
-    return wikipedia.page(input).images
+def get_wikipedia_article_images(user_inputs):
+    return wikipedia.page(user_inputs).images
 
 def get_random_wikipedia_article_image(images):
     try:
@@ -54,17 +54,17 @@ def create_embed_message(title = "Title"):
     )
     return embed
 
-def get_search_result(input):
-    return wikipedia.search(input, results= 1, suggestion=False)
+def get_search_result(user_inputs):
+    return wikipedia.search(user_inputs, results= 1, suggestion=False)
 
-def get_all_suggestions(input):
-    return wikipedia.search(input)
+def get_all_suggestions(user_inputs):
+    return wikipedia.search(user_inputs)
 
 def get_search_result_url(search_result):
     return wikipedia.page(search_result).url
 
-def populate_embed_message(embed, input, summary, image_url, search_result, search_result_url):
-    embed.title = f'{input}'
+def populate_embed_message(embed, user_inputs, summary, image_url, search_result, search_result_url):
+    embed.title = f'{user_inputs}'
     embed.description = summary
     embed.set_image(url=image_url)
     embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/740004762845577297/757319155211960582/wikipedialog.png")
@@ -98,32 +98,32 @@ def create_deubgging_message_for_PageError(user_inputs):
     return f'Your input, "{user_inputs}", does not match any pages!'
 
 @bot.command(name="search")
-async def info(ctx, input):
+async def info(ctx, user_inputs):
     try:
-        summary = get_wikipedia_summary(input)
+        summary = get_wikipedia_summary(user_inputs)
         if len(summary) > 2048:
             summary = add_trailing_dots(summary)
-        images = get_wikipedia_article_images(input)
+        images = get_wikipedia_article_images(user_inputs)
         image_url = get_random_wikipedia_article_image(images)
-        search_result = get_search_result(input)
+        search_result = get_search_result(user_inputs)
         search_result_url = get_search_result_url(search_result)
         embed = create_embed_message()
-        embed = populate_embed_message(embed, input, summary, image_url, search_result, search_result_url)
+        embed = populate_embed_message(embed, user_inputs, summary, image_url, search_result, search_result_url)
         await ctx.send(embed=embed)
     except wikipedia.DisambiguationError as error:
         possible_choices = get_all_choices_from_error_message(error)
         some_suggestions = get_suggestions_from_possible_choices(possible_choices)
         some_suggestions_message = create_message_from_some_suggestions(some_suggestions)
-        debug_message = create_debugging_message_for_DisambiguationError(input, some_suggestions_message)
+        debug_message = create_debugging_message_for_DisambiguationError(user_inputs, some_suggestions_message)
         await ctx.send(f'{debug_message}')
     except wikipedia.PageError as error:
-        debug_message = create_deubgging_message_for_PageError(input)
+        debug_message = create_deubgging_message_for_PageError(user_inputs)
         await ctx.send(f'{debug_message}')
 
 @bot.command(name="suggestions")
-async def suggestion(ctx, input):
+async def suggestion(ctx, user_inputs):
     try:
-        possible_choices = get_all_suggestions(input)
+        possible_choices = get_all_suggestions(user_inputs)
         some_suggestions = get_suggestions_from_possible_choices(possible_choices)
         embed = create_embed_message(title = "Wikipedia Suggestions Results")
         for count, suggestion in enumerate(some_suggestions):
@@ -136,10 +136,10 @@ async def suggestion(ctx, input):
         possible_choices = get_all_choices_from_error_message(error)
         some_suggestions = get_suggestions_from_possible_choices(possible_choices)
         some_suggestions_message = create_message_from_some_suggestions(some_suggestions)
-        debug_message = create_debugging_message_for_DisambiguationError(input, some_suggestions_message)
+        debug_message = create_debugging_message_for_DisambiguationError(user_inputs, some_suggestions_message)
         await ctx.send(f'{debug_message}')
     except wikipedia.PageError as error:
-        debug_message = create_deubgging_message_for_PageError(input)
+        debug_message = create_deubgging_message_for_PageError(user_inputs)
         await ctx.send(f'{debug_message}')
 
 @bot.event
