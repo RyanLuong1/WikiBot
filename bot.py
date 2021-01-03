@@ -134,7 +134,6 @@ async def on_reaction_add(reaction, user):
                     number = number_words_to_numbers(number_word.lower())
                     field = get_field_from_suggestion_embed(reaction, number)
                     name = get_name_from_field(field)
-                    embed = create_embed_message(name)
                     summary = wikipedia.summary(name)
                     if len(summary) > 2048:
                         summary = add_trailing_dots(summary)
@@ -143,7 +142,7 @@ async def on_reaction_add(reaction, user):
                     search_result = get_search_result(name)
                     search_result_url = get_search_result_url(search_result)
                     embed = create_embed_message(name)
-                    embed = populate_embed_message(embed, input, summary, image_url, search_result, search_result_url)
+                    embed = populate_embed_message(embed, name, summary, image_url, search_result, search_result_url)
                     await reaction.message.edit(embed=embed)
                     await reaction.message.clear_reactions()
 
