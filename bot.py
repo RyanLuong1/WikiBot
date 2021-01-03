@@ -79,6 +79,9 @@ def get_field_from_suggestion_embed(reaction, number):
 def get_name_from_field(field):
     return field.name[3:]
 
+def get_all_choices_from_error_message(error):
+    return error.options
+
 @bot.command(name="search")
 async def info(ctx, input):
     try:
@@ -93,7 +96,7 @@ async def info(ctx, input):
         embed = populate_embed_message(embed, input, summary, image_url, search_result, search_result_url)
         await ctx.send(embed=embed)
     except wikipedia.DisambiguationError as error:
-        possible_choices = error.options
+        possible_choices = get_all_choices_from_error_message(error)
         some_suggestions = random.sample(possible_choices, 5)
         some_suggestions_message = '\n'.join([suggestion for suggestion in some_suggestions])
         await ctx.send(f'Your input, "{input}", is too general. Please be more specific!\nTry these.\n{some_suggestions_message}')
