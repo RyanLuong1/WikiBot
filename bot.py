@@ -128,22 +128,24 @@ async def on_reaction_add(reaction, user):
         if reaction.message.embeds:
             if reaction.message.embeds[0].title == "Wikipedia Suggestions Results":
                 if reaction.emoji == "1️⃣" or reaction.emoji == "2️⃣" or reaction.emoji == "3️⃣" or reaction.emoji == "4️⃣" or reaction.emoji == "5️⃣":
-                    number_word = get_number_word(reaction.emoji[0])
-                    number = number_words_to_numbers(number_word.lower())
-                    field = get_field_from_suggestion_embed(reaction, number)
-                    name = get_name_from_field(field)
-                    summary = wikipedia.summary(name)
-                    if len(summary) > 2048:
-                        summary = add_trailing_dots(summary)
-                    images = get_wikipedia_article_images(name)
-                    image_url = get_random_wikipedia_article_image(images)
-                    search_result = get_search_result(name)
-                    search_result_url = get_search_result_url(search_result)
-                    embed = create_embed_message()
-                    embed = populate_embed_message(embed, name, summary, image_url, search_result, search_result_url)
-                    await reaction.message.edit(embed=embed)
-                    await reaction.message.clear_reactions()
-
+                    try:
+                        number_word = get_number_word(reaction.emoji[0])
+                        number = number_words_to_numbers(number_word.lower())
+                        field = get_field_from_suggestion_embed(reaction, number)
+                        name = get_name_from_field(field)
+                        summary = wikipedia.summary(name)
+                        if len(summary) > 2048:
+                            summary = add_trailing_dots(summary)
+                        images = get_wikipedia_article_images(name)
+                        image_url = get_random_wikipedia_article_image(images)
+                        search_result = get_search_result(name)
+                        search_result_url = get_search_result_url(search_result)
+                        embed = create_embed_message()
+                        embed = populate_embed_message(embed, name, summary, image_url, search_result, search_result_url)
+                        await reaction.message.edit(embed=embed)
+                        await reaction.message.clear_reactions()
+                    except wikipedia.DisambiguationError:
+                        await reaction.message.remove_reaction(reaction, user)
                     
                     
 bot.run(TOKEN)
