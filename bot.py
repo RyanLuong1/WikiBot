@@ -35,6 +35,9 @@ def add_trailing_dots(summary):
     summary = summary[:white_space_occurence - 1] + ('.')*how_many_trailing_dots
     return summary
 
+def get_wikipedia_summary(input):
+    return wikipedia.summary(input)
+
 def get_wikipedia_article_images(input):
     return wikipedia.page(input).images
 
@@ -76,7 +79,7 @@ def get_name_from_field(field):
 @bot.command(name="search")
 async def info(ctx, input):
     try:
-        summary = wikipedia.summary(input)
+        summary = get_wikipedia_summary(input)
         if len(summary) > 2048:
             summary = add_trailing_dots(summary)
         images = get_wikipedia_article_images(input)
@@ -99,10 +102,7 @@ async def suggestion(ctx, input):
     try:
         suggestion_result = wikipedia.search(input)
         some_suggestions = random.sample(suggestion_result, 5)
-        embed = discord.Embed(
-            title = f'Wikipedia Suggestions Results',
-            colour = discord.Colour.blue()
-        )
+        embed = create_embed_message(title = "Wikipedia Suggestions Results")
         index = 1
         for suggestion in some_suggestions:
             embed.add_field(name=f'{index}. {suggestion}', value='\u200b', inline=False)
@@ -135,14 +135,12 @@ async def on_reaction_add(reaction, user):
                     summary = wikipedia.summary(name)
                     if len(summary) > 2048:
                         summary = add_trailing_dots(summary)
-                    image = wikipedia.page(name).images
-                    image_url = random.choice(image)
-                    embed.description = summary
-                    embed.set_image(url=image_url)
-                    embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/740004762845577297/757319155211960582/wikipedialog.png")
-                    search_result = wikipedia.search(name, results= 1, suggestion=False)
-                    result_url = wikipedia.page(search_result).url
-                    embed.add_field(name=search_result, value=result_url, inline=False)
+                    images = get_wikipedia_article_images(input)
+                    image_url = get_random_wikipedia_article_image(images)
+                    search_result = get_search_result(input)
+                    search_result_url = get_search_result_url(search_result)
+                    embed = create_embed_message(name)
+                    embed = populate_embed_message(embed, input, summary, image_url, search_result, search_result_url)
                     await reaction.message.edit(embed=embed)
                     await reaction.message.clear_reactions()
 
