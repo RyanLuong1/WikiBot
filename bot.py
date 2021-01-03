@@ -146,6 +146,8 @@ async def on_reaction_add(reaction, user):
                         await reaction.message.clear_reactions()
                     except wikipedia.DisambiguationError:
                         await reaction.message.remove_reaction(reaction, user)
+                    except wikipedia.PageError:
+                        await reaction.message.remove_reaction(reaction, user)
                     
                     
 bot.run(TOKEN)
