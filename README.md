@@ -54,6 +54,7 @@ Prefix: !
 *   !suggestions "\<input>"
      Find up to five Wikipedia articles and display the name in an embed message. The embed message will have reactions that the user can react to. The embed message will display the title, summary, link, and the article's picture based on the number.
 </br>
+
 > The user must enter quotes. If not, any words after the space of the input will not be considered 
 
 > A picture will only be in the embed message if the article contains it
