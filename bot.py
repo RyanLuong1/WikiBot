@@ -67,7 +67,7 @@ def populate_embed_message(embed, user_inputs, summary, image_url, search_result
     embed.title = f'{user_inputs}'
     embed.description = summary
     embed.set_image(url=image_url)
-    embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/740004762845577297/757319155211960582/wikipedialog.png")
+    embed.set_thumbnail(url="https://user-images.githubusercontent.com/47546985/131374407-4a50f228-c3f3-423f-bab8-9dfa2f9415da.png")
     embed.add_field(name=search_result, value=search_result_url, inline=False)
     return embed
 
