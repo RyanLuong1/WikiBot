@@ -137,7 +137,7 @@ Setting up WikiBot requires yourself to host it.
 ### WikiBot Setup (Windows 10)
 1. Open command prompt and type ```cd Downloads```
 2. Type ```git clone https://github.com/RyanLuong1/WikiBot.git``` 
-3. Type ```cd Moji``` and type ```pip install -r requirements.txt```
+3. Type ```cd WikiBot``` and type ```pip3 install -r requirements.txt```
 4. In the same directory, create a new file ```.env``` by typing ```type nul > .env``` and opening through the command prompt or through your preferred text editor. It should contain the following:
     ```
       DISCORD_TOKEN = "YOUR_DISCORD_TOKEN"
